@@ -23,25 +23,31 @@ public class CategoryService : ICategoryService
     public async Task CreateCategoryAsync(CreateCategoryDto createCategoryDto)
     {
         var value =_mapper.Map<Category>(createCategoryDto);
+        await _categoryCollection.InsertOneAsync(value);
     }
 
-    public Task DeleteCategoryAsync(string id)
+    public async Task DeleteCategoryAsync(string id)
     {
-        throw new NotImplementedException();
+        await _categoryCollection.DeleteOneAsync(x => x.CategoryId == id);
     }
 
-    public Task<List<ResultCategoryDto>> GetAllCategoryAsync()
+    public async Task<List<ResultCategoryDto>> GetAllCategoryAsync()
     {
-        throw new NotImplementedException();
+        var values =await _categoryCollection.Find(_ => true).ToListAsync();
+        var result = _mapper.Map<List<ResultCategoryDto>>(values);
+        return result;
     }
 
-    public Task<GetByIdCategoryDto> GetByIdCategoryAsync()
+    public async Task<GetByIdCategoryDto> GetByIdCategoryAsync(string id)
     {
-        throw new NotImplementedException();
+        var values = await _categoryCollection.Find(x =>x.CategoryId==id).FirstOrDefaultAsync();
+        var result = _mapper.Map<GetByIdCategoryDto>(values);
+        return result;
     }
 
-    public Task UpdateCategoryAsync(UpdateCategoryDto updateCategoryDto)
+    public async Task UpdateCategoryAsync(UpdateCategoryDto updateCategoryDto)
     {
-        throw new NotImplementedException();
+        var value = _mapper.Map<Category>(updateCategoryDto);
+        await _categoryCollection.FindOneAndReplaceAsync(x => x.CategoryId == updateCategoryDto.CategoryId, value);
     }
 }
