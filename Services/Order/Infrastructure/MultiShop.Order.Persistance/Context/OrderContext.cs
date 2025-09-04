@@ -9,10 +9,11 @@ using System.Threading.Tasks;
 namespace MultiShop.Order.Persistance.Context;
 public class OrderContext : DbContext
 {
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    public OrderContext(DbContextOptions<OrderContext> options)
+     : base(options)
     {
-        optionsBuilder.UseSqlServer("Server=(localdb)\\MSSQLLocalDB;initial Catalog=MultiShopOrderDb;integrated Security=True;");
     }
+
 
     public DbSet<Address> Addresses { get; set; }
     public DbSet<OrderDetail> OrderDetails { get; set; }
